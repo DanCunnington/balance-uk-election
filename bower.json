@@ -1,0 +1,29 @@
+{
+  "name": "angular-webpack-bluemix",
+  "description": "",
+  "main": "src/app.js",
+  "license": "ISC",
+  "homepage": "https://github.com/annaet/angular-webpack-bluemix",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src/bower_components"
+  ],
+  "dependencies": {
+    "angular": "^1.6.2",
+    "angular-ui-router": "^0.4.2",
+    "angular-bootstrap": "^2.5.0",
+    "bootstrap": "^3.3.7",
+    "html5-boilerplate": "^5.3.0",
+    "angular-pageslide-directive": "^2.1.4",
+    "angular-sanitize": "^1.6.3",
+    "angular-css-injector": "^1.4.0",
+    "angular-css": "^1.0.8"
+  },
+  "resolutions": {
+    "angular": "^1.6.2"
+  }
+}

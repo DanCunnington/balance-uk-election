@@ -1,0 +1,55 @@
+<div class="search-bar">
+  <span class="glyphicon glyphicon-search"></span>
+  <input class="search-bar-input" placeholder="Search Query" ng-model="searchQuery" />
+</div>
+
+<div class="results">
+  <div class="results-container">
+    <h2 class="results-header">Latest Results</h2>
+
+    <div class="articles" ng-if="latest">
+      <div ng-repeat="article in latest" class="article-container" ng-click="openArticle(article)">
+
+        <article ng-if="article.title" article="article"></article>
+        <tweet ng-if="article.platform" article="article"></tweet>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="results-categories">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="category in categories">
+        <span class="badge">{{category.count}}</span>
+        {{category.name}}
+      </li>
+    </ul>
+  </div>
+</div>
+
+<pageslide ps-open="isArticleOpen" ps-size="60%">
+  <div class="ps-container">
+    <div class="selected-article">
+      <div class="selected-article-body" ng-class="{'selected-tweet-body': selectedArticle.platform}">
+
+        <div ng-if="!selectedArticle.platform" ng-bind-html="trustedHTML"></div>
+        <!-- <iframe ng-if="!selectedArticle.platform" class="selected-article-iframe" ng-src="{{selectedArticle.trustedUrl}}"></iframe> -->
+
+        <tweet ng-if="selectedArticle.platform" article="selectedArticle"></tweet>
+      </div>
+    </div>
+
+    <div class="suggested-articles">
+      <h2>Recommended Reading <small>{{selectedArticle.analysed.percentage}}% similarity to other articles</small></h2>
+
+      <div class="articles">
+        <div ng-repeat="article in removed" class="article-container">
+
+          <article ng-if="article.title" article="article" comparison="selectedArticle"></article>
+          <tweet ng-if="article.platform" article="article" comparison="selectedArticle"></tweet>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</pageslide>

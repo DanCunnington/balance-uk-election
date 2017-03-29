@@ -1,0 +1,32 @@
+<svg></svg>
+
+<div class="description">
+  <div>
+    Showing data trasmitted and received
+  </div>
+  <div>
+    Max datarate seen in the last minute: {{ctrl.maxSeen}} byte<span ng-show="ctrl.maxSeen !== 1">s</span>
+  </div>
+  <!-- <span ng-if="ctrl.dataDirection === 'rx'"> received</span>
+  <span ng-if="ctrl.dataDirection === 'tx'"> transmitted</span> -->
+</div>
+
+<div id="tooltip" class="tooltip hidden"></div>
+
+<div class="buttons">
+  <button ng-click="ctrl.toggleTx()">
+    <span ng-if="ctrl.showTx">Hide </span>
+    <span ng-if="!ctrl.showTx">Show </span>
+    tx line
+  </button>
+  <button ng-click="ctrl.toggleRx()">
+    <span ng-if="ctrl.showRx">Hide </span>
+    <span ng-if="!ctrl.showRx">Show </span>
+    rx line
+  </button>
+<!--  <button ng-click="ctrl.swapData()">Show data
+    <span ng-if="ctrl.dataDirection === 'tx'"> received</span>
+    <span ng-if="ctrl.dataDirection === 'rx'"> transmitted</span>
+  </button> -->
+  <button ng-click="ctrl.resetConnectivity()">Reset Connectivity</button>
+</div>

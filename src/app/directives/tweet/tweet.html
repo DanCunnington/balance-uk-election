@@ -1,0 +1,27 @@
+<div class="article tweet">
+  <div class="article-body">
+    <div class="tweet-body">
+      <img ng-if="ctrl.article.platform === 'Twitter'" src="http://goinkscape.com/wp-content/uploads/2015/07/twitter-logo-final.png" alt="" class="twitter-logo">
+      <img ng-if="ctrl.article.platform === 'Facebook'" src="https://marketinghy.com/wp-content/uploads/2014/04/Facebook-Logo-Circle.png" alt="" class="twitter-logo">
+      <img ng-if="ctrl.article.platform === 'Reddit'" src="https://lh3.googleusercontent.com/J41hsV2swVteoeB8pDhqbQR3H83NrEBFv2q_kYdq1xp9vsI1Gz9A9pzjcwX_JrZpPGsa=w300" alt="" class="twitter-logo">
+      <p class="unhighlighted-tweet">
+        {{ctrl.article.text}}
+      </p>
+      <p ng-bind-html="ctrl.article.trustedText" class="highlighted-tweet"></p>
+    </div>
+
+    <div class="similarity">
+      <i ng-show="!ctrl.article.similarity" class='fa fa-circle-o-notch fa-spin'></i>
+
+      <uib-progress ng-show="ctrl.article.similarity" class="progress-striped">
+        <uib-bar value="ctrl.article.similarity" type="success"></uib-bar>
+        <uib-bar value="ctrl.article.dissimilarity" type="danger"></uib-bar>
+      </uib-progress>
+    </div>
+
+    <div class="view">
+      <div ng-if="ctrl.compareOpposing()" class="opposing">Another perspective?</div>
+      <div ng-if="ctrl.compareSupporting()" class="supporting">Similar view</div>
+    </div>
+  </div>
+</div>

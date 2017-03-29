@@ -1,0 +1,294 @@
+$font-stack: "Helvetica Neue", Helvetica, sans-serif;
+$background-color: #f5f5f5;
+$font-color: #111;
+$primary-color: #3b5998;
+$secondary-color: #d0d1d5;
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font:  $font-stack;
+  color: $font-color;
+  background: $background-color;
+}
+
+.ui-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// Search bar
+
+.search-bar {
+  width: 100%;
+  height: 60px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-bottom: 1px solid $secondary-color;
+}
+
+.search-bar .glyphicon {
+  width: 60px;
+  padding: 0 0 2px 25px;
+  font-size: 22px;
+  color: $secondary-color;
+}
+
+.search-bar .search-bar-input {
+  width: calc(100% - 60px);
+  align-self: stretch;
+  border: 0;
+}
+
+.search-bar .search-bar-input:focus {
+  outline: none;
+}
+
+// Results
+
+.results {
+  display: flex;
+  flex-grow: 1;
+}
+
+.results-container {
+  width: 80%;
+}
+
+.results-categories {
+  width: 20%;
+}
+
+.results-categories .list-group,
+.results-categories .list-group .list-group-item:first-child,
+.results-categories .list-group .list-group-item:last-child {
+  border-radius: 0;
+}
+
+.results-categories .list-group .list-group-item:first-child {
+  border: 0;
+}
+
+.results-categories .list-group {
+  height: 100%;
+  background: white;
+  border-color: #dfe0e4;
+}
+
+.results-categories .list-group .list-group-item {
+  border: 1px solid;
+  border-left: 0;
+  border-right: 0;
+  border-color: #e5e6e9 #fff;
+}
+
+.results-header {
+  margin: 10px;
+  font-weight: bold;
+  color: $primary-color;
+}
+
+// Articles
+
+.articles {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 5px;
+}
+
+.article-container {
+  width: 20%;
+  height: 240px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.article > h4 {
+  background: $primary-color;
+  color: #fff;
+  margin: 0;
+  height: 70px;
+  padding: 5px 8px;
+  border-radius: 3px 3px 0 0;
+}
+
+.article-header {
+  background: white;
+  margin: 0;
+  height: 70px;
+  padding: 5px 8px;
+}
+
+.article-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fff;
+  height: 230px;
+  border: 1px solid;
+  border-color: #e5e6e9 #dfe0e4 $secondary-color;
+  border-radius: 0 0 3px 3px;
+}
+
+.article-content {
+  overflow: auto;
+}
+
+.article-img-container {
+  // height: 140px;
+  overflow: hidden;
+}
+
+.article-img {
+  width: 100%;
+}
+
+// Tweets
+
+.tweet-body {
+  padding: 10px;
+  overflow: auto;
+}
+
+.twitter-logo {
+  width: 30px;
+  margin: 0 10px 5px 0;
+  float: left;
+}
+
+// UIB progress bars
+
+.similarity {
+  text-align: center;
+  color: $secondary-color;
+}
+
+.progress {
+  margin-bottom: 0;
+  border-radius: 0 0 3px 3px;
+}
+
+.progress-bar-success {
+  background-color: #89be4c;
+}
+
+// Full article
+
+.ng-pageslide {
+  background: white;
+  border-left: 1px solid #dfe0e4;
+}
+
+.ps-container {
+  height: 100%;
+}
+
+.selected-article {
+  height: calc(100% - 320px);
+  overflow: auto;
+}
+
+// .selected-article h1 {
+//   color: white;
+//   background: $primary-color;
+//   margin: 0;
+//   padding: 20px 20px 10px;
+//   font-size: 30px;
+// }
+
+.selected-article-body, .selected-article-iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.selected-article-body .tweet {
+  margin: 30px;
+  font-size: 32px;
+}
+
+.selected-tweet-body {
+  display: flex;
+  align-items: center;
+}
+
+.selected-tweet-body .twitter-logo {
+  width: 80px;
+  margin: 0 15px 5px 0;
+}
+
+.selected-tweet-body .similarity {
+  display: none;
+}
+
+.highlighted-tweet {
+  display: none;
+}
+
+.selected-tweet-body .highlighted-tweet {
+  display: block;
+}
+
+.selected-tweet-body .unhighlighted-tweet {
+  display: none;
+}
+
+.neutral-text {
+  background: #e0e0e0;
+}
+
+.positive-text {
+  background: #b5ef73;
+}
+
+.negative-text {
+  background: #f57571;
+}
+
+.suggested-articles {
+  height: 320px;
+  border-top: 1px solid $secondary-color;
+  background: #f5f5f5;
+}
+
+.suggested-articles h2 {
+  color: $primary-color;
+  background: white;
+  padding: 20px 10px;
+  margin: 0 0 5px 0;
+  border-bottom: 1px solid $secondary-color;
+  font-size: 26px;
+}
+
+.suggested-articles .article-container {
+  width: 25%;
+}
+
+.view {
+  color: white;
+  text-align: center;
+  display: none;
+}
+
+.view .opposing {
+  background: #fbcf45; //#d9534f;
+  color: #ad891a; //#862c29;
+}
+
+.view .supporting {
+  background: #89be4c;
+  color: #077107;
+}
+
+.suggested-articles .view {
+  display: block;
+}
+
+.suggested-articles .similarity {
+  display: none;
+}
