@@ -1,5 +1,5 @@
 const request = require('request')
-const endpoint = 'https://facebook-hack-server.eu-gb.mybluemix.net/'
+const endpoint = 'http://facebook-hack-nodejs-server.eu-gb.mybluemix.net/'
 
 let getSocial = (req, res) => {
   request.get(endpoint + 'social', (err, response, body) => {
@@ -14,7 +14,7 @@ let getPublishers = (req, res) => {
 }
 
 let getAnalysis = (req, res) => {
-  request.get(endpoint + 'analysed', (err, response, body) => {
+  request.get(endpoint + 'output/analysed.json', (err, response, body) => {
     res.send(body)
   })
 }
