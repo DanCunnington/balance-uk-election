@@ -14,10 +14,10 @@
     <h2 class="results-header">Latest Results</h2>
 
     <div class="articles" ng-if="latest">
-      <div ng-repeat="article in latest" class="article-container" ng-click="openArticle(article)">
+      <div ng-repeat="article in latest track by $index" class="article-container" ng-click="openArticle(article)">
 
-        <article ng-if="article.title" article="article"></article>
-        <tweet ng-if="article.platform" article="article"></tweet>
+        <article ng-if="article.title" article="article" i=$index></article>
+        <tweet ng-if="article.platform" article="article" i=$index></tweet>
 
       </div>
     </div>

@@ -154,6 +154,7 @@ body {
 
 .article-content {
   overflow: auto;
+  height: 100%;
 }
 
 .article-img-container {
@@ -167,15 +168,40 @@ body {
 
 // Tweets
 
+.tweet-container {
+  height: calc(100% - 20px);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
 .tweet-body {
   padding: 10px;
+  height: 100%;
   overflow: auto;
+}
+
+.tweet-details {
+  position: absolute;
+  z-index: -5;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.95;
 }
 
 .twitter-logo {
   width: 30px;
   margin: 0 10px 5px 0;
   float: left;
+}
+
+// Sentiment Chart
+
+.sentiment-chart {
+  width: 100%;
+  height: 100%;
+  background: white;
 }
 
 // UIB progress bars
@@ -226,6 +252,10 @@ body {
 .selected-article-body .tweet {
   margin: 30px;
   font-size: 32px;
+}
+
+.selected-article .tweet-details {
+  display: none;
 }
 
 .selected-tweet-body {
