@@ -38,8 +38,8 @@
     <div class="selected-article">
       <div class="selected-article-body" ng-class="{'selected-tweet-body': selectedArticle.platform}">
 
-        <div ng-if="!selectedArticle.platform" ng-bind-html="trustedHTML"></div>
-        <!-- <iframe ng-if="!selectedArticle.platform" class="selected-article-iframe" ng-src="{{selectedArticle.trustedUrl}}"></iframe> -->
+        <!-- <div ng-if="!selectedArticle.platform" ng-bind-html="trustedHTML"></div> -->
+        <iframe ng-if="!selectedArticle.platform" class="selected-article-iframe" ng-src="{{selectedArticle.trustedUrl}}"></iframe>
 
         <tweet ng-if="selectedArticle.platform" article="selectedArticle"></tweet>
       </div>
