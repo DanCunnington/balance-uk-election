@@ -39,3 +39,5 @@ bundle.js.map
 
 # OSX files
 .DS_Store
+
+dist
