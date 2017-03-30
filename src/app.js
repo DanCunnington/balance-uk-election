@@ -5,8 +5,6 @@ import './bower_components/angular-bootstrap/ui-bootstrap-tpls'
 import './bower_components/angular-ui-router/release/angular-ui-router'
 import './bower_components/angular-pageslide-directive/dist/angular-pageslide-directive'
 import './bower_components/bootstrap/dist/js/bootstrap'
-import './bower_components/angular-sanitize/angular-sanitize'
-import './bower_components/angular-css/angular-css'
 import './bower_components/tiny-angular-wordcloud/dist/tangCloud'
 
 import './bower_components/html5-boilerplate/dist/css/normalize.css'

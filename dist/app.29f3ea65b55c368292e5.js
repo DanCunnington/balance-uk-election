@@ -63,14 +63,14 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(19);
+__webpack_require__(17);
 module.exports = angular;
 
 
@@ -94,7 +94,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Article = function Article() {
   _classCallCheck(this, Article);
 
-  this.template = __webpack_require__(21);
+  this.template = __webpack_require__(20);
   this.restrict = 'E';
   this.scope = {
     article: '=',
@@ -231,7 +231,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Tweet = function Tweet() {
   _classCallCheck(this, Tweet);
 
-  this.template = __webpack_require__(22);
+  this.template = __webpack_require__(21);
   this.restrict = 'E';
   this.scope = {
     article: '=',
@@ -387,7 +387,7 @@ var ExampleController = function ExampleController($scope, $http, $sce) {
     return array;
   }
 
-  $http.get('analysed').then(function (response) {
+  $http.get('https://facebook-hack-nodejs-server.eu-gb.mybluemix.net/output/analysed.json').then(function (response) {
     console.log(response.data);
     $scope.latest = response.data.social.concat(response.data.publisher);
 
@@ -15141,667 +15141,6 @@ angular.module('ui.bootstrap.typeahead').run(function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/**
- * AngularCSS - CSS on-demand for AngularJS
- * @version v1.0.8
- * @author Alex Castillo
- * @link http://castillo-io.github.io/angular-css
- * @license MIT License, http://www.opensource.org/licenses/MIT
- */
-
-
-
-(function (angular) {
-
-  /**
-   * AngularCSS Module
-   * Contains: config, constant, provider and run
-   **/
-  var angularCSS = angular.module('angularCSS', []);
-
-  // Old module name handler
-  angular.module('door3.css', []).run(function () {
-    console.error('AngularCSS: The module name "door3.css" is now deprecated. Please use "angularCSS" instead.');
-  });
-
-  // Provider
-  angularCSS.provider('$css', [function $cssProvider() {
-
-    // Defaults - default options that can be overridden from application config
-    var defaults = this.defaults = {
-      element: 'link',
-      rel: 'stylesheet',
-      type: 'text/css',
-      container: 'head',
-      method: 'append',
-      weight: 0
-    };
-
-    var DEBUG = false;
-
-    // Turn off/on in order to see console logs during dev mode
-    this.debugMode = function (mode) {
-      if (angular.isDefined(mode)) DEBUG = mode;
-      return DEBUG;
-    };
-
-    this.$get = ['$rootScope', '$injector', '$q', '$window', '$timeout', '$compile', '$http', '$filter', '$log', '$interpolate', function $get($rootScope, $injector, $q, $window, $timeout, $compile, $http, $filter, $log, $interpolate) {
-
-      var $css = {};
-
-      var template = '<link ng-repeat="stylesheet in stylesheets | orderBy: \'weight\' track by $index " rel="{{ stylesheet.rel }}" type="{{ stylesheet.type }}" ng-href="{{ stylesheet.href }}" ng-attr-media="{{ stylesheet.media }}">';
-
-      // Using correct interpolation symbols.
-      template = template.replace(/{{/g, $interpolate.startSymbol()).replace(/}}/g, $interpolate.endSymbol());
-
-      // Variables - default options that can be overridden from application config
-      var mediaQuery = {},
-          mediaQueryListener = {},
-          mediaQueriesToIgnore = ['print'],
-          options = angular.extend({}, defaults),
-          container = angular.element(document.querySelector ? document.querySelector(options.container) : document.getElementsByTagName(options.container)[0]),
-          dynamicPaths = [];
-
-      // Parse all directives
-      angular.forEach($directives, function (directive, key) {
-        if (directive.hasOwnProperty('css')) {
-          $directives[key] = parse(directive.css);
-        }
-      });
-
-      /**
-       * Listen for directive add event in order to add stylesheet(s)
-       **/
-      function $directiveAddEventListener(event, directive, scope) {
-        // Binds directive's css
-        if (scope && directive.hasOwnProperty('css')) {
-          $css.bind(directive.css, scope);
-        }
-      }
-
-      /**
-       * Listen for route change event and add/remove stylesheet(s)
-       **/
-      function $routeEventListener(event, current, prev) {
-        // Removes previously added css rules
-        if (prev) {
-          $css.remove($css.getFromRoute(prev).concat(dynamicPaths));
-          // Reset dynamic paths array
-          dynamicPaths.length = 0;
-        }
-        // Adds current css rules
-        if (current) {
-          $css.add($css.getFromRoute(current));
-        }
-      }
-
-      /**
-       * Listen for state change event and add/remove stylesheet(s)
-       **/
-      function $stateEventListener(event, current, params, prev) {
-        // Removes previously added css rules
-        if (prev) {
-          $css.remove($css.getFromState(prev).concat(dynamicPaths));
-          // Reset dynamic paths array
-          dynamicPaths.length = 0;
-        }
-        // Adds current css rules
-        if (current) {
-          $css.add($css.getFromState(current));
-        }
-      }
-
-      /**
-       * Map breakpoitns defined in defaults to stylesheet media attribute
-       **/
-      function mapBreakpointToMedia(stylesheet) {
-        if (angular.isDefined(options.breakpoints)) {
-          if (stylesheet.breakpoint in options.breakpoints) {
-            stylesheet.media = options.breakpoints[stylesheet.breakpoint];
-          }
-          delete stylesheet.breakpoints;
-        }
-      }
-
-      /**
-       * Parse: returns array with full all object based on defaults
-       **/
-      function parse(obj) {
-        if (!obj) {
-          return;
-        }
-        // Function syntax
-        if (angular.isFunction(obj)) {
-          obj = angular.copy($injector.invoke(obj));
-        }
-        // String syntax
-        if (angular.isString(obj)) {
-          obj = angular.extend({
-            href: obj
-          }, options);
-        }
-        // Array of strings syntax
-        if (angular.isArray(obj) && angular.isString(obj[0])) {
-          angular.forEach(obj, function (item) {
-            obj = angular.extend({
-              href: item
-            }, options);
-          });
-        }
-        // Object syntax
-        if (angular.isObject(obj) && !angular.isArray(obj)) {
-          obj = angular.extend({}, options, obj);
-        }
-        // Array of objects syntax
-        if (angular.isArray(obj) && angular.isObject(obj[0])) {
-          angular.forEach(obj, function (item) {
-            obj = angular.extend(item, options);
-          });
-        }
-        // Map breakpoint to media attribute
-        mapBreakpointToMedia(obj);
-        return obj;
-      }
-
-      // Add stylesheets to scope
-      $rootScope.stylesheets = [];
-
-      // Adds compiled link tags to container element
-      container[options.method]($compile(template)($rootScope));
-
-      // Directive event listener (emulated internally)
-      $rootScope.$on('$directiveAdd', $directiveAddEventListener);
-
-      // Routes event listener ($route required)
-      $rootScope.$on('$routeChangeSuccess', $routeEventListener);
-
-      // States event listener ($state required)
-      $rootScope.$on('$stateChangeSuccess', $stateEventListener);
-
-      /**
-       * Bust Cache
-       **/
-      function bustCache(stylesheet) {
-        if (!stylesheet) {
-          if (DEBUG) $log.error('No stylesheets provided');
-          return;
-        }
-        var queryString = '?cache=';
-        // Append query string for bust cache only once
-        if (stylesheet.href.indexOf(queryString) === -1) {
-          stylesheet.href = stylesheet.href + (stylesheet.bustCache ? queryString + new Date().getTime() : '');
-        }
-      }
-
-      /**
-       * Filter By: returns an array of routes based on a property option
-       **/
-      function filterBy(array, prop) {
-        if (!array || !prop) {
-          if (DEBUG) $log.error('filterBy: missing array or property');
-          return;
-        }
-        return $filter('filter')(array, function (item) {
-          return item[prop];
-        });
-      }
-
-      /**
-       * Add Media Query
-       **/
-      function addViaMediaQuery(stylesheet) {
-        if (!stylesheet) {
-          if (DEBUG) $log.error('No stylesheet provided');
-          return;
-        }
-        // Media query object
-        mediaQuery[stylesheet.href] = $window.matchMedia(stylesheet.media);
-        // Media Query Listener function
-        mediaQueryListener[stylesheet.href] = function (mediaQuery) {
-          // Trigger digest
-          $timeout(function () {
-            if (mediaQuery.matches) {
-              // Add stylesheet
-              $rootScope.stylesheets.push(stylesheet);
-            } else {
-              var index = $rootScope.stylesheets.indexOf($filter('filter')($rootScope.stylesheets, {
-                href: stylesheet.href
-              })[0]);
-              // Remove stylesheet
-              if (index !== -1) {
-                $rootScope.stylesheets.splice(index, 1);
-              }
-            }
-          });
-        };
-        // Listen for media query changes
-        mediaQuery[stylesheet.href].addListener(mediaQueryListener[stylesheet.href]);
-        // Invoke first media query check
-        mediaQueryListener[stylesheet.href](mediaQuery[stylesheet.href]);
-      }
-
-      /**
-       * Remove Media Query
-       **/
-      function removeViaMediaQuery(stylesheet) {
-        if (!stylesheet) {
-          if (DEBUG) $log.error('No stylesheet provided');
-          return;
-        }
-        // Remove media query listener
-        if ($rootScope && angular.isDefined(mediaQuery) && mediaQuery[stylesheet.href] && angular.isDefined(mediaQueryListener)) {
-          mediaQuery[stylesheet.href].removeListener(mediaQueryListener[stylesheet.href]);
-        }
-      }
-
-      /**
-       * Is Media Query: checks for media settings, media queries to be ignore and match media support
-       **/
-      function isMediaQuery(stylesheet) {
-        if (!stylesheet) {
-          if (DEBUG) $log.error('No stylesheet provided');
-          return;
-        }
-        return !!(
-        // Check for media query setting
-        stylesheet.media
-        // Check for media queries to be ignored
-        && mediaQueriesToIgnore.indexOf(stylesheet.media) === -1
-        // Check for matchMedia support
-        && $window.matchMedia);
-      }
-
-      /**
-       * Get From Route: returns array of css objects from single route
-       **/
-      $css.getFromRoute = function (route) {
-        if (!route) {
-          if (DEBUG) $log.error('Get From Route: No route provided');
-          return;
-        }
-        var css = null,
-            result = [];
-        if (route.$$route && route.$$route.css) {
-          css = route.$$route.css;
-        } else if (route.css) {
-          css = route.css;
-        }
-        // Adds route css rules to array
-        if (css) {
-          if (angular.isArray(css)) {
-            angular.forEach(css, function (cssItem) {
-              if (angular.isFunction(cssItem)) {
-                dynamicPaths.push(parse(cssItem));
-              }
-              result.push(parse(cssItem));
-            });
-          } else {
-            if (angular.isFunction(css)) {
-              dynamicPaths.push(parse(css));
-            }
-            result.push(parse(css));
-          }
-        }
-        return result;
-      };
-
-      /**
-       * Get From Routes: returns array of css objects from ng routes
-       **/
-      $css.getFromRoutes = function (routes) {
-        if (!routes) {
-          if (DEBUG) $log.error('Get From Routes: No routes provided');
-          return;
-        }
-        var result = [];
-        // Make array of all routes
-        angular.forEach(routes, function (route) {
-          var css = $css.getFromRoute(route);
-          if (css.length) {
-            result.push(css[0]);
-          }
-        });
-        return result;
-      };
-
-      /**
-       * Get From State: returns array of css objects from single state
-       **/
-      $css.getFromState = function (state) {
-        if (!state) {
-          if (DEBUG) $log.error('Get From State: No state provided');
-          return;
-        }
-        var result = [];
-        // State "views" notation
-        if (angular.isDefined(state.views)) {
-          angular.forEach(state.views, function (item) {
-            if (item.css) {
-              if (angular.isFunction(item.css)) {
-                dynamicPaths.push(parse(item.css));
-              }
-              result.push(parse(item.css));
-            }
-          });
-        }
-        // State "children" notation
-        if (angular.isDefined(state.children)) {
-          angular.forEach(state.children, function (child) {
-            if (child.css) {
-              if (angular.isFunction(child.css)) {
-                dynamicPaths.push(parse(child.css));
-              }
-              result.push(parse(child.css));
-            }
-            if (angular.isDefined(child.children)) {
-              angular.forEach(child.children, function (childChild) {
-                if (childChild.css) {
-                  if (angular.isFunction(childChild.css)) {
-                    dynamicPaths.push(parse(childChild.css));
-                  }
-                  result.push(parse(childChild.css));
-                }
-              });
-            }
-          });
-        }
-        // State default notation
-        if (angular.isDefined(state.css) || angular.isDefined(state.data) && angular.isDefined(state.data.css)) {
-          var css = state.css || state.data.css;
-          // For multiple stylesheets
-          if (angular.isArray(css)) {
-            angular.forEach(css, function (itemCss) {
-              if (angular.isFunction(itemCss)) {
-                dynamicPaths.push(parse(itemCss));
-              }
-              result.push(parse(itemCss));
-            });
-            // For single stylesheets
-          } else {
-            if (angular.isFunction(css)) {
-              dynamicPaths.push(parse(css));
-            }
-            result.push(parse(css));
-          }
-        }
-        return result;
-      };
-
-      /**
-       * Get From States: returns array of css objects from states
-       **/
-      $css.getFromStates = function (states) {
-        if (!states) {
-          if (DEBUG) $log.error('Get From States: No states provided');
-          return;
-        }
-        var result = [];
-        // Make array of all routes
-        angular.forEach(states, function (state) {
-          var css = $css.getFromState(state);
-          if (angular.isArray(css)) {
-            angular.forEach(css, function (cssItem) {
-              result.push(cssItem);
-            });
-          } else {
-            result.push(css);
-          }
-        });
-        return result;
-      };
-
-      /**
-       * Preload: preloads css via http request
-       **/
-      $css.preload = function (stylesheets, callback) {
-        // If no stylesheets provided, then preload all
-        if (!stylesheets) {
-          stylesheets = [];
-          // Add all stylesheets from custom directives to array
-          if ($directives.length) {
-            Array.prototype.push.apply(stylesheets, $directives);
-          }
-          // Add all stylesheets from ngRoute to array
-          if ($injector.has('$route')) {
-            Array.prototype.push.apply(stylesheets, $css.getFromRoutes($injector.get('$route').routes));
-          }
-          // Add all stylesheets from UI Router to array
-          if ($injector.has('$state')) {
-            Array.prototype.push.apply(stylesheets, $css.getFromStates($injector.get('$state').get()));
-          }
-          stylesheets = filterBy(stylesheets, 'preload');
-        }
-        if (!angular.isArray(stylesheets)) {
-          stylesheets = [stylesheets];
-        }
-        var stylesheetLoadPromises = [];
-        angular.forEach(stylesheets, function (stylesheet, key) {
-          stylesheet = stylesheets[key] = parse(stylesheet);
-          stylesheetLoadPromises.push(
-          // Preload via ajax request
-          $http.get(stylesheet.href).error(function (response) {
-            if (DEBUG) $log.error('AngularCSS: Incorrect path for ' + stylesheet.href);
-          }));
-        });
-        if (angular.isFunction(callback)) {
-          $q.all(stylesheetLoadPromises).then(function () {
-            callback(stylesheets);
-          });
-        }
-      };
-
-      /**
-       * Bind: binds css in scope with own scope create/destroy events
-       **/
-      $css.bind = function (css, $scope) {
-        if (!css || !$scope) {
-          if (DEBUG) $log.error('No scope or stylesheets provided');
-          return;
-        }
-        var result = [];
-        // Adds route css rules to array
-        if (angular.isArray(css)) {
-          angular.forEach(css, function (cssItem) {
-            result.push(parse(cssItem));
-          });
-        } else {
-          result.push(parse(css));
-        }
-        $css.add(result);
-        if (DEBUG) $log.debug('$css.bind(): Added', result);
-        $scope.$on('$destroy', function () {
-          $css.remove(result);
-          if (DEBUG) $log.debug('$css.bind(): Removed', result);
-        });
-      };
-
-      /**
-       * Add: adds stylesheets to scope
-       **/
-      $css.add = function (stylesheets, callback) {
-        if (!stylesheets) {
-          if (DEBUG) $log.error('No stylesheets provided');
-          return;
-        }
-        if (!angular.isArray(stylesheets)) {
-          stylesheets = [stylesheets];
-        }
-        angular.forEach(stylesheets, function (stylesheet) {
-          stylesheet = parse(stylesheet);
-          // Avoid adding duplicate stylesheets
-          if (stylesheet.href && !$filter('filter')($rootScope.stylesheets, { href: stylesheet.href }).length) {
-            // Bust Cache feature
-            bustCache(stylesheet);
-            // Media Query add support check
-            if (isMediaQuery(stylesheet)) {
-              addViaMediaQuery(stylesheet);
-            } else {
-              $rootScope.stylesheets.push(stylesheet);
-            }
-            if (DEBUG) $log.debug('$css.add(): ' + stylesheet.href);
-          }
-        });
-        // Broadcasts custom event for css add
-        $rootScope.$broadcast('$cssAdd', stylesheets, $rootScope.stylesheets);
-      };
-
-      /**
-       * Remove: removes stylesheets from scope
-       **/
-      $css.remove = function (stylesheets, callback) {
-        if (!stylesheets) {
-          if (DEBUG) $log.error('No stylesheets provided');
-          return;
-        }
-        if (!angular.isArray(stylesheets)) {
-          stylesheets = [stylesheets];
-        }
-        // Only proceed based on persist setting
-        stylesheets = $filter('filter')(stylesheets, function (stylesheet) {
-          return !stylesheet.persist;
-        });
-        angular.forEach(stylesheets, function (stylesheet) {
-          stylesheet = parse(stylesheet);
-          // Get index of current item to be removed based on href
-          var index = $rootScope.stylesheets.indexOf($filter('filter')($rootScope.stylesheets, {
-            href: stylesheet.href
-          })[0]);
-          // Remove stylesheet from scope (if found)
-          if (index !== -1) {
-            $rootScope.stylesheets.splice(index, 1);
-          }
-          // Remove stylesheet via media query
-          removeViaMediaQuery(stylesheet);
-          if (DEBUG) $log.debug('$css.remove(): ' + stylesheet.href);
-        });
-        // Broadcasts custom event for css remove
-        $rootScope.$broadcast('$cssRemove', stylesheets, $rootScope.stylesheets);
-      };
-
-      /**
-       * Remove All: removes all style tags from the DOM
-       **/
-      $css.removeAll = function () {
-        // Remove all stylesheets from scope
-        if ($rootScope && $rootScope.hasOwnProperty('stylesheets')) {
-          $rootScope.stylesheets.length = 0;
-        }
-        if (DEBUG) $log.debug('all stylesheets removed');
-      };
-
-      // Preload all stylesheets
-      $css.preload();
-
-      return $css;
-    }];
-  }]);
-
-  /**
-   * Links filter - renders the stylesheets array in html format
-   **/
-  angularCSS.filter('$cssLinks', function () {
-    return function (stylesheets) {
-      if (!stylesheets || !angular.isArray(stylesheets)) {
-        return stylesheets;
-      }
-      var result = '';
-      angular.forEach(stylesheets, function (stylesheet) {
-        result += '<link rel="' + stylesheet.rel + '" type="' + stylesheet.type + '" href="' + stylesheet.href + '"';
-        result += stylesheet.media ? ' media="' + stylesheet.media + '"' : '';
-        result += '>\n\n';
-      });
-      return result;
-    };
-  });
-
-  /**
-   * Run - auto instantiate the $css provider by injecting it in the run phase of this module
-   **/
-  angularCSS.run(['$css', function ($css) {}]);
-
-  /**
-   * AngularJS hack - This way we can get and decorate all custom directives
-   * in order to broadcast a custom $directiveAdd event
-   **/
-  var $directives = [];
-  var originalModule = angular.module;
-  var arraySelect = function arraySelect(array, action) {
-    return array.reduce(function (previous, current) {
-      previous.push(action(current));
-      return previous;
-    }, []);
-  };
-  var arrayExists = function arrayExists(array, value) {
-    return array.indexOf(value) > -1;
-  };
-
-  angular.module = function () {
-    var module = originalModule.apply(this, arguments);
-    var originalDirective = module.directive;
-    module.directive = function (directiveName, directiveFactory) {
-      var originalDirectiveFactory = angular.isFunction(directiveFactory) ? directiveFactory : directiveFactory[directiveFactory ? directiveFactory.length - 1 : 0];
-      try {
-        var directive = angular.copy(originalDirectiveFactory)();
-        directive.directiveName = directiveName;
-        if (directive.hasOwnProperty('css') && !arrayExists(arraySelect($directives, function (x) {
-          return x.ddo.directiveName;
-        }), directiveName)) {
-          $directives.push({ ddo: directive, handled: false });
-        }
-      } catch (e) {}
-      return originalDirective.apply(this, arguments);
-    };
-    var originalComponent = module.component;
-    module.component = function (componentName, componentObject) {
-      componentObject.directiveName = componentName;
-      if (componentObject.hasOwnProperty('css') && !arrayExists(arraySelect($directives, function (x) {
-        return x.ddo.directiveName;
-      }), componentName)) {
-        $directives.push({ ddo: componentObject, handled: false });
-      }
-      return originalComponent.apply(this, arguments);
-    };
-    module.config(['$provide', '$injector', function ($provide, $injector) {
-      angular.forEach($directives, function ($dir) {
-        if (!$dir.handled) {
-          var $directive = $dir.ddo;
-          var dirProvider = $directive.directiveName + 'Directive';
-          if ($injector.has(dirProvider)) {
-            $dir.handled = true;
-            $provide.decorator(dirProvider, ['$delegate', '$rootScope', '$timeout', function ($delegate, $rootScope, $timeout) {
-              var directive = $delegate[0];
-              var compile = directive.compile;
-              if (!directive.css) {
-                directive.css = $directive.css;
-              }
-              directive.compile = function () {
-                var link = compile ? compile.apply(this, arguments) : false;
-                return function (scope) {
-                  var linkArgs = arguments;
-                  $timeout(function () {
-                    if (link) {
-                      link.apply(this, linkArgs);
-                    }
-                  });
-                  $rootScope.$broadcast('$directiveAdd', directive, scope);
-                };
-              };
-              return $delegate;
-            }]);
-          }
-        }
-      });
-    }]);
-    return module;
-  };
-  /* End of hack */
-})(angular);
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -16134,725 +15473,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * @license AngularJS v1.6.3
- * (c) 2010-2017 Google, Inc. http://angularjs.org
- * License: MIT
- */
-(function (window, angular) {
-  'use strict';
-
-  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-   *     Any commits to this file should be reviewed with security in mind.  *
-   *   Changes to this file can potentially create security vulnerabilities. *
-   *          An approval from 2 Core members with history of modifying      *
-   *                         this file is required.                          *
-   *                                                                         *
-   *  Does the change somehow allow for arbitrary javascript to be executed? *
-   *    Or allows for someone to change the prototype of built-in objects?   *
-   *     Or gives undesired access to variables likes document or window?    *
-   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-  var $sanitizeMinErr = angular.$$minErr('$sanitize');
-  var bind;
-  var extend;
-  var forEach;
-  var isDefined;
-  var lowercase;
-  var noop;
-  var nodeContains;
-  var htmlParser;
-  var htmlSanitizeWriter;
-
-  /**
-   * @ngdoc module
-   * @name ngSanitize
-   * @description
-   *
-   * # ngSanitize
-   *
-   * The `ngSanitize` module provides functionality to sanitize HTML.
-   *
-   *
-   * <div doc-module-components="ngSanitize"></div>
-   *
-   * See {@link ngSanitize.$sanitize `$sanitize`} for usage.
-   */
-
-  /**
-   * @ngdoc service
-   * @name $sanitize
-   * @kind function
-   *
-   * @description
-   *   Sanitizes an html string by stripping all potentially dangerous tokens.
-   *
-   *   The input is sanitized by parsing the HTML into tokens. All safe tokens (from a whitelist) are
-   *   then serialized back to properly escaped html string. This means that no unsafe input can make
-   *   it into the returned string.
-   *
-   *   The whitelist for URL sanitization of attribute values is configured using the functions
-   *   `aHrefSanitizationWhitelist` and `imgSrcSanitizationWhitelist` of {@link ng.$compileProvider
-   *   `$compileProvider`}.
-   *
-   *   The input may also contain SVG markup if this is enabled via {@link $sanitizeProvider}.
-   *
-   * @param {string} html HTML input.
-   * @returns {string} Sanitized HTML.
-   *
-   * @example
-     <example module="sanitizeExample" deps="angular-sanitize.js" name="sanitize-service">
-     <file name="index.html">
-       <script>
-           angular.module('sanitizeExample', ['ngSanitize'])
-             .controller('ExampleController', ['$scope', '$sce', function($scope, $sce) {
-               $scope.snippet =
-                 '<p style="color:blue">an html\n' +
-                 '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
-                 'snippet</p>';
-               $scope.deliberatelyTrustDangerousSnippet = function() {
-                 return $sce.trustAsHtml($scope.snippet);
-               };
-             }]);
-       </script>
-       <div ng-controller="ExampleController">
-          Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
-         <table>
-           <tr>
-             <td>Directive</td>
-             <td>How</td>
-             <td>Source</td>
-             <td>Rendered</td>
-           </tr>
-           <tr id="bind-html-with-sanitize">
-             <td>ng-bind-html</td>
-             <td>Automatically uses $sanitize</td>
-             <td><pre>&lt;div ng-bind-html="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
-             <td><div ng-bind-html="snippet"></div></td>
-           </tr>
-           <tr id="bind-html-with-trust">
-             <td>ng-bind-html</td>
-             <td>Bypass $sanitize by explicitly trusting the dangerous value</td>
-             <td>
-             <pre>&lt;div ng-bind-html="deliberatelyTrustDangerousSnippet()"&gt;
-  &lt;/div&gt;</pre>
-             </td>
-             <td><div ng-bind-html="deliberatelyTrustDangerousSnippet()"></div></td>
-           </tr>
-           <tr id="bind-default">
-             <td>ng-bind</td>
-             <td>Automatically escapes</td>
-             <td><pre>&lt;div ng-bind="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
-             <td><div ng-bind="snippet"></div></td>
-           </tr>
-         </table>
-         </div>
-     </file>
-     <file name="protractor.js" type="protractor">
-       it('should sanitize the html snippet by default', function() {
-         expect(element(by.css('#bind-html-with-sanitize div')).getAttribute('innerHTML')).
-           toBe('<p>an html\n<em>click here</em>\nsnippet</p>');
-       });
-  
-       it('should inline raw snippet if bound to a trusted value', function() {
-         expect(element(by.css('#bind-html-with-trust div')).getAttribute('innerHTML')).
-           toBe("<p style=\"color:blue\">an html\n" +
-                "<em onmouseover=\"this.textContent='PWN3D!'\">click here</em>\n" +
-                "snippet</p>");
-       });
-  
-       it('should escape snippet without any filter', function() {
-         expect(element(by.css('#bind-default div')).getAttribute('innerHTML')).
-           toBe("&lt;p style=\"color:blue\"&gt;an html\n" +
-                "&lt;em onmouseover=\"this.textContent='PWN3D!'\"&gt;click here&lt;/em&gt;\n" +
-                "snippet&lt;/p&gt;");
-       });
-  
-       it('should update', function() {
-         element(by.model('snippet')).clear();
-         element(by.model('snippet')).sendKeys('new <b onclick="alert(1)">text</b>');
-         expect(element(by.css('#bind-html-with-sanitize div')).getAttribute('innerHTML')).
-           toBe('new <b>text</b>');
-         expect(element(by.css('#bind-html-with-trust div')).getAttribute('innerHTML')).toBe(
-           'new <b onclick="alert(1)">text</b>');
-         expect(element(by.css('#bind-default div')).getAttribute('innerHTML')).toBe(
-           "new &lt;b onclick=\"alert(1)\"&gt;text&lt;/b&gt;");
-       });
-     </file>
-     </example>
-   */
-
-  /**
-   * @ngdoc provider
-   * @name $sanitizeProvider
-   * @this
-   *
-   * @description
-   * Creates and configures {@link $sanitize} instance.
-   */
-  function $SanitizeProvider() {
-    var svgEnabled = false;
-
-    this.$get = ['$$sanitizeUri', function ($$sanitizeUri) {
-      if (svgEnabled) {
-        extend(validElements, svgElements);
-      }
-      return function (html) {
-        var buf = [];
-        htmlParser(html, htmlSanitizeWriter(buf, function (uri, isImage) {
-          return !/^unsafe:/.test($$sanitizeUri(uri, isImage));
-        }));
-        return buf.join('');
-      };
-    }];
-
-    /**
-     * @ngdoc method
-     * @name $sanitizeProvider#enableSvg
-     * @kind function
-     *
-     * @description
-     * Enables a subset of svg to be supported by the sanitizer.
-     *
-     * <div class="alert alert-warning">
-     *   <p>By enabling this setting without taking other precautions, you might expose your
-     *   application to click-hijacking attacks. In these attacks, sanitized svg elements could be positioned
-     *   outside of the containing element and be rendered over other elements on the page (e.g. a login
-     *   link). Such behavior can then result in phishing incidents.</p>
-     *
-     *   <p>To protect against these, explicitly setup `overflow: hidden` css rule for all potential svg
-     *   tags within the sanitized content:</p>
-     *
-     *   <br>
-     *
-     *   <pre><code>
-     *   .rootOfTheIncludedContent svg {
-     *     overflow: hidden !important;
-     *   }
-     *   </code></pre>
-     * </div>
-     *
-     * @param {boolean=} flag Enable or disable SVG support in the sanitizer.
-     * @returns {boolean|ng.$sanitizeProvider} Returns the currently configured value if called
-     *    without an argument or self for chaining otherwise.
-     */
-    this.enableSvg = function (enableSvg) {
-      if (isDefined(enableSvg)) {
-        svgEnabled = enableSvg;
-        return this;
-      } else {
-        return svgEnabled;
-      }
-    };
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    // Private stuff
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-
-    bind = angular.bind;
-    extend = angular.extend;
-    forEach = angular.forEach;
-    isDefined = angular.isDefined;
-    lowercase = angular.lowercase;
-    noop = angular.noop;
-
-    htmlParser = htmlParserImpl;
-    htmlSanitizeWriter = htmlSanitizeWriterImpl;
-
-    nodeContains = window.Node.prototype.contains || /** @this */function (arg) {
-      // eslint-disable-next-line no-bitwise
-      return !!(this.compareDocumentPosition(arg) & 16);
-    };
-
-    // Regular Expressions for parsing tags and attributes
-    var SURROGATE_PAIR_REGEXP = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
-
-    // Match everything outside of normal chars and " (quote character)
-    NON_ALPHANUMERIC_REGEXP = /([^#-~ |!])/g;
-
-    // Good source of info about elements and attributes
-    // http://dev.w3.org/html5/spec/Overview.html#semantics
-    // http://simon.html5.org/html-elements
-
-    // Safe Void Elements - HTML5
-    // http://dev.w3.org/html5/spec/Overview.html#void-elements
-    var voidElements = toMap('area,br,col,hr,img,wbr');
-
-    // Elements that you can, intentionally, leave open (and which close themselves)
-    // http://dev.w3.org/html5/spec/Overview.html#optional-tags
-    var optionalEndTagBlockElements = toMap('colgroup,dd,dt,li,p,tbody,td,tfoot,th,thead,tr'),
-        optionalEndTagInlineElements = toMap('rp,rt'),
-        optionalEndTagElements = extend({}, optionalEndTagInlineElements, optionalEndTagBlockElements);
-
-    // Safe Block Elements - HTML5
-    var blockElements = extend({}, optionalEndTagBlockElements, toMap('address,article,' + 'aside,blockquote,caption,center,del,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5,' + 'h6,header,hgroup,hr,ins,map,menu,nav,ol,pre,section,table,ul'));
-
-    // Inline Elements - HTML5
-    var inlineElements = extend({}, optionalEndTagInlineElements, toMap('a,abbr,acronym,b,' + 'bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,q,ruby,rp,rt,s,' + 'samp,small,span,strike,strong,sub,sup,time,tt,u,var'));
-
-    // SVG Elements
-    // https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Elements
-    // Note: the elements animate,animateColor,animateMotion,animateTransform,set are intentionally omitted.
-    // They can potentially allow for arbitrary javascript to be executed. See #11290
-    var svgElements = toMap('circle,defs,desc,ellipse,font-face,font-face-name,font-face-src,g,glyph,' + 'hkern,image,linearGradient,line,marker,metadata,missing-glyph,mpath,path,polygon,polyline,' + 'radialGradient,rect,stop,svg,switch,text,title,tspan');
-
-    // Blocked Elements (will be stripped)
-    var blockedElements = toMap('script,style');
-
-    var validElements = extend({}, voidElements, blockElements, inlineElements, optionalEndTagElements);
-
-    //Attributes that have href and hence need to be sanitized
-    var uriAttrs = toMap('background,cite,href,longdesc,src,xlink:href');
-
-    var htmlAttrs = toMap('abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,' + 'color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,' + 'ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,' + 'scope,scrolling,shape,size,span,start,summary,tabindex,target,title,type,' + 'valign,value,vspace,width');
-
-    // SVG attributes (without "id" and "name" attributes)
-    // https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Attributes
-    var svgAttrs = toMap('accent-height,accumulate,additive,alphabetic,arabic-form,ascent,' + 'baseProfile,bbox,begin,by,calcMode,cap-height,class,color,color-rendering,content,' + 'cx,cy,d,dx,dy,descent,display,dur,end,fill,fill-rule,font-family,font-size,font-stretch,' + 'font-style,font-variant,font-weight,from,fx,fy,g1,g2,glyph-name,gradientUnits,hanging,' + 'height,horiz-adv-x,horiz-origin-x,ideographic,k,keyPoints,keySplines,keyTimes,lang,' + 'marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mathematical,' + 'max,min,offset,opacity,orient,origin,overline-position,overline-thickness,panose-1,' + 'path,pathLength,points,preserveAspectRatio,r,refX,refY,repeatCount,repeatDur,' + 'requiredExtensions,requiredFeatures,restart,rotate,rx,ry,slope,stemh,stemv,stop-color,' + 'stop-opacity,strikethrough-position,strikethrough-thickness,stroke,stroke-dasharray,' + 'stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,' + 'stroke-width,systemLanguage,target,text-anchor,to,transform,type,u1,u2,underline-position,' + 'underline-thickness,unicode,unicode-range,units-per-em,values,version,viewBox,visibility,' + 'width,widths,x,x-height,x1,x2,xlink:actuate,xlink:arcrole,xlink:role,xlink:show,xlink:title,' + 'xlink:type,xml:base,xml:lang,xml:space,xmlns,xmlns:xlink,y,y1,y2,zoomAndPan', true);
-
-    var validAttrs = extend({}, uriAttrs, svgAttrs, htmlAttrs);
-
-    function toMap(str, lowercaseKeys) {
-      var obj = {},
-          items = str.split(','),
-          i;
-      for (i = 0; i < items.length; i++) {
-        obj[lowercaseKeys ? lowercase(items[i]) : items[i]] = true;
-      }
-      return obj;
-    }
-
-    var inertBodyElement;
-    (function (window) {
-      var doc;
-      if (window.document && window.document.implementation) {
-        doc = window.document.implementation.createHTMLDocument('inert');
-      } else {
-        throw $sanitizeMinErr('noinert', 'Can\'t create an inert html document');
-      }
-      var docElement = doc.documentElement || doc.getDocumentElement();
-      var bodyElements = docElement.getElementsByTagName('body');
-
-      // usually there should be only one body element in the document, but IE doesn't have any, so we need to create one
-      if (bodyElements.length === 1) {
-        inertBodyElement = bodyElements[0];
-      } else {
-        var html = doc.createElement('html');
-        inertBodyElement = doc.createElement('body');
-        html.appendChild(inertBodyElement);
-        doc.appendChild(html);
-      }
-    })(window);
-
-    /**
-     * @example
-     * htmlParser(htmlString, {
-     *     start: function(tag, attrs) {},
-     *     end: function(tag) {},
-     *     chars: function(text) {},
-     *     comment: function(text) {}
-     * });
-     *
-     * @param {string} html string
-     * @param {object} handler
-     */
-    function htmlParserImpl(html, handler) {
-      if (html === null || html === undefined) {
-        html = '';
-      } else if (typeof html !== 'string') {
-        html = '' + html;
-      }
-      inertBodyElement.innerHTML = html;
-
-      //mXSS protection
-      var mXSSAttempts = 5;
-      do {
-        if (mXSSAttempts === 0) {
-          throw $sanitizeMinErr('uinput', 'Failed to sanitize html because the input is unstable');
-        }
-        mXSSAttempts--;
-
-        // strip custom-namespaced attributes on IE<=11
-        if (window.document.documentMode) {
-          stripCustomNsAttrs(inertBodyElement);
-        }
-        html = inertBodyElement.innerHTML; //trigger mXSS
-        inertBodyElement.innerHTML = html;
-      } while (html !== inertBodyElement.innerHTML);
-
-      var node = inertBodyElement.firstChild;
-      while (node) {
-        switch (node.nodeType) {
-          case 1:
-            // ELEMENT_NODE
-            handler.start(node.nodeName.toLowerCase(), attrToMap(node.attributes));
-            break;
-          case 3:
-            // TEXT NODE
-            handler.chars(node.textContent);
-            break;
-        }
-
-        var nextNode;
-        if (!(nextNode = node.firstChild)) {
-          if (node.nodeType === 1) {
-            handler.end(node.nodeName.toLowerCase());
-          }
-          nextNode = getNonDescendant('nextSibling', node);
-          if (!nextNode) {
-            while (nextNode == null) {
-              node = getNonDescendant('parentNode', node);
-              if (node === inertBodyElement) break;
-              nextNode = getNonDescendant('nextSibling', node);
-              if (node.nodeType === 1) {
-                handler.end(node.nodeName.toLowerCase());
-              }
-            }
-          }
-        }
-        node = nextNode;
-      }
-
-      while (node = inertBodyElement.firstChild) {
-        inertBodyElement.removeChild(node);
-      }
-    }
-
-    function attrToMap(attrs) {
-      var map = {};
-      for (var i = 0, ii = attrs.length; i < ii; i++) {
-        var attr = attrs[i];
-        map[attr.name] = attr.value;
-      }
-      return map;
-    }
-
-    /**
-     * Escapes all potentially dangerous characters, so that the
-     * resulting string can be safely inserted into attribute or
-     * element text.
-     * @param value
-     * @returns {string} escaped text
-     */
-    function encodeEntities(value) {
-      return value.replace(/&/g, '&amp;').replace(SURROGATE_PAIR_REGEXP, function (value) {
-        var hi = value.charCodeAt(0);
-        var low = value.charCodeAt(1);
-        return '&#' + ((hi - 0xD800) * 0x400 + (low - 0xDC00) + 0x10000) + ';';
-      }).replace(NON_ALPHANUMERIC_REGEXP, function (value) {
-        return '&#' + value.charCodeAt(0) + ';';
-      }).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    /**
-     * create an HTML/XML writer which writes to buffer
-     * @param {Array} buf use buf.join('') to get out sanitized html string
-     * @returns {object} in the form of {
-     *     start: function(tag, attrs) {},
-     *     end: function(tag) {},
-     *     chars: function(text) {},
-     *     comment: function(text) {}
-     * }
-     */
-    function htmlSanitizeWriterImpl(buf, uriValidator) {
-      var ignoreCurrentElement = false;
-      var out = bind(buf, buf.push);
-      return {
-        start: function start(tag, attrs) {
-          tag = lowercase(tag);
-          if (!ignoreCurrentElement && blockedElements[tag]) {
-            ignoreCurrentElement = tag;
-          }
-          if (!ignoreCurrentElement && validElements[tag] === true) {
-            out('<');
-            out(tag);
-            forEach(attrs, function (value, key) {
-              var lkey = lowercase(key);
-              var isImage = tag === 'img' && lkey === 'src' || lkey === 'background';
-              if (validAttrs[lkey] === true && (uriAttrs[lkey] !== true || uriValidator(value, isImage))) {
-                out(' ');
-                out(key);
-                out('="');
-                out(encodeEntities(value));
-                out('"');
-              }
-            });
-            out('>');
-          }
-        },
-        end: function end(tag) {
-          tag = lowercase(tag);
-          if (!ignoreCurrentElement && validElements[tag] === true && voidElements[tag] !== true) {
-            out('</');
-            out(tag);
-            out('>');
-          }
-          // eslint-disable-next-line eqeqeq
-          if (tag == ignoreCurrentElement) {
-            ignoreCurrentElement = false;
-          }
-        },
-        chars: function chars(_chars) {
-          if (!ignoreCurrentElement) {
-            out(encodeEntities(_chars));
-          }
-        }
-      };
-    }
-
-    /**
-     * When IE9-11 comes across an unknown namespaced attribute e.g. 'xlink:foo' it adds 'xmlns:ns1' attribute to declare
-     * ns1 namespace and prefixes the attribute with 'ns1' (e.g. 'ns1:xlink:foo'). This is undesirable since we don't want
-     * to allow any of these custom attributes. This method strips them all.
-     *
-     * @param node Root element to process
-     */
-    function stripCustomNsAttrs(node) {
-      while (node) {
-        if (node.nodeType === window.Node.ELEMENT_NODE) {
-          var attrs = node.attributes;
-          for (var i = 0, l = attrs.length; i < l; i++) {
-            var attrNode = attrs[i];
-            var attrName = attrNode.name.toLowerCase();
-            if (attrName === 'xmlns:ns1' || attrName.lastIndexOf('ns1:', 0) === 0) {
-              node.removeAttributeNode(attrNode);
-              i--;
-              l--;
-            }
-          }
-        }
-
-        var nextNode = node.firstChild;
-        if (nextNode) {
-          stripCustomNsAttrs(nextNode);
-        }
-
-        node = getNonDescendant('nextSibling', node);
-      }
-    }
-
-    function getNonDescendant(propName, node) {
-      // An element is clobbered if its `propName` property points to one of its descendants
-      var nextNode = node[propName];
-      if (nextNode && nodeContains.call(node, nextNode)) {
-        throw $sanitizeMinErr('elclob', 'Failed to sanitize html because the element is clobbered: {0}', node.outerHTML || node.outerText);
-      }
-      return nextNode;
-    }
-  }
-
-  function sanitizeText(chars) {
-    var buf = [];
-    var writer = htmlSanitizeWriter(buf, noop);
-    writer.chars(chars);
-    return buf.join('');
-  }
-
-  // define ngSanitize module and register $sanitize service
-  angular.module('ngSanitize', []).provider('$sanitize', $SanitizeProvider).info({ angularVersion: '1.6.3' });
-
-  /**
-   * @ngdoc filter
-   * @name linky
-   * @kind function
-   *
-   * @description
-   * Finds links in text input and turns them into html links. Supports `http/https/ftp/mailto` and
-   * plain email address links.
-   *
-   * Requires the {@link ngSanitize `ngSanitize`} module to be installed.
-   *
-   * @param {string} text Input text.
-   * @param {string} target Window (`_blank|_self|_parent|_top`) or named frame to open links in.
-   * @param {object|function(url)} [attributes] Add custom attributes to the link element.
-   *
-   *    Can be one of:
-   *
-   *    - `object`: A map of attributes
-   *    - `function`: Takes the url as a parameter and returns a map of attributes
-   *
-   *    If the map of attributes contains a value for `target`, it overrides the value of
-   *    the target parameter.
-   *
-   *
-   * @returns {string} Html-linkified and {@link $sanitize sanitized} text.
-   *
-   * @usage
-     <span ng-bind-html="linky_expression | linky"></span>
-   *
-   * @example
-     <example module="linkyExample" deps="angular-sanitize.js" name="linky-filter">
-       <file name="index.html">
-         <div ng-controller="ExampleController">
-         Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
-         <table>
-           <tr>
-             <th>Filter</th>
-             <th>Source</th>
-             <th>Rendered</th>
-           </tr>
-           <tr id="linky-filter">
-             <td>linky filter</td>
-             <td>
-               <pre>&lt;div ng-bind-html="snippet | linky"&gt;<br>&lt;/div&gt;</pre>
-             </td>
-             <td>
-               <div ng-bind-html="snippet | linky"></div>
-             </td>
-           </tr>
-           <tr id="linky-target">
-            <td>linky target</td>
-            <td>
-              <pre>&lt;div ng-bind-html="snippetWithSingleURL | linky:'_blank'"&gt;<br>&lt;/div&gt;</pre>
-            </td>
-            <td>
-              <div ng-bind-html="snippetWithSingleURL | linky:'_blank'"></div>
-            </td>
-           </tr>
-           <tr id="linky-custom-attributes">
-            <td>linky custom attributes</td>
-            <td>
-              <pre>&lt;div ng-bind-html="snippetWithSingleURL | linky:'_self':{rel: 'nofollow'}"&gt;<br>&lt;/div&gt;</pre>
-            </td>
-            <td>
-              <div ng-bind-html="snippetWithSingleURL | linky:'_self':{rel: 'nofollow'}"></div>
-            </td>
-           </tr>
-           <tr id="escaped-html">
-             <td>no filter</td>
-             <td><pre>&lt;div ng-bind="snippet"&gt;<br>&lt;/div&gt;</pre></td>
-             <td><div ng-bind="snippet"></div></td>
-           </tr>
-         </table>
-       </file>
-       <file name="script.js">
-         angular.module('linkyExample', ['ngSanitize'])
-           .controller('ExampleController', ['$scope', function($scope) {
-             $scope.snippet =
-               'Pretty text with some links:\n' +
-               'http://angularjs.org/,\n' +
-               'mailto:us@somewhere.org,\n' +
-               'another@somewhere.org,\n' +
-               'and one more: ftp://127.0.0.1/.';
-             $scope.snippetWithSingleURL = 'http://angularjs.org/';
-           }]);
-       </file>
-       <file name="protractor.js" type="protractor">
-         it('should linkify the snippet with urls', function() {
-           expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
-               toBe('Pretty text with some links: http://angularjs.org/, us@somewhere.org, ' +
-                    'another@somewhere.org, and one more: ftp://127.0.0.1/.');
-           expect(element.all(by.css('#linky-filter a')).count()).toEqual(4);
-         });
-  
-         it('should not linkify snippet without the linky filter', function() {
-           expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText()).
-               toBe('Pretty text with some links: http://angularjs.org/, mailto:us@somewhere.org, ' +
-                    'another@somewhere.org, and one more: ftp://127.0.0.1/.');
-           expect(element.all(by.css('#escaped-html a')).count()).toEqual(0);
-         });
-  
-         it('should update', function() {
-           element(by.model('snippet')).clear();
-           element(by.model('snippet')).sendKeys('new http://link.');
-           expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
-               toBe('new http://link.');
-           expect(element.all(by.css('#linky-filter a')).count()).toEqual(1);
-           expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText())
-               .toBe('new http://link.');
-         });
-  
-         it('should work with the target property', function() {
-          expect(element(by.id('linky-target')).
-              element(by.binding("snippetWithSingleURL | linky:'_blank'")).getText()).
-              toBe('http://angularjs.org/');
-          expect(element(by.css('#linky-target a')).getAttribute('target')).toEqual('_blank');
-         });
-  
-         it('should optionally add custom attributes', function() {
-          expect(element(by.id('linky-custom-attributes')).
-              element(by.binding("snippetWithSingleURL | linky:'_self':{rel: 'nofollow'}")).getText()).
-              toBe('http://angularjs.org/');
-          expect(element(by.css('#linky-custom-attributes a')).getAttribute('rel')).toEqual('nofollow');
-         });
-       </file>
-     </example>
-   */
-  angular.module('ngSanitize').filter('linky', ['$sanitize', function ($sanitize) {
-    var LINKY_URL_REGEXP = /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"\u201d\u2019]/i,
-        MAILTO_REGEXP = /^mailto:/i;
-
-    var linkyMinErr = angular.$$minErr('linky');
-    var isDefined = angular.isDefined;
-    var isFunction = angular.isFunction;
-    var isObject = angular.isObject;
-    var isString = angular.isString;
-
-    return function (text, target, attributes) {
-      if (text == null || text === '') return text;
-      if (!isString(text)) throw linkyMinErr('notstring', 'Expected string but received: {0}', text);
-
-      var attributesFn = isFunction(attributes) ? attributes : isObject(attributes) ? function getAttributesObject() {
-        return attributes;
-      } : function getEmptyAttributesObject() {
-        return {};
-      };
-
-      var match;
-      var raw = text;
-      var html = [];
-      var url;
-      var i;
-      while (match = raw.match(LINKY_URL_REGEXP)) {
-        // We can not end in these as they are sometimes found at the end of the sentence
-        url = match[0];
-        // if we did not match ftp/http/www/mailto then assume mailto
-        if (!match[2] && !match[4]) {
-          url = (match[3] ? 'http://' : 'mailto:') + url;
-        }
-        i = match.index;
-        addText(raw.substr(0, i));
-        addLink(url, match[0].replace(MAILTO_REGEXP, ''));
-        raw = raw.substring(i + match[0].length);
-      }
-      addText(raw);
-      return $sanitize(html.join(''));
-
-      function addText(text) {
-        if (!text) {
-          return;
-        }
-        html.push(sanitizeText(text));
-      }
-
-      function addLink(url, text) {
-        var key,
-            linkAttributes = attributesFn(url);
-        html.push('<a ');
-
-        for (key in linkAttributes) {
-          html.push(key + '="' + linkAttributes[key] + '" ');
-        }
-
-        if (isDefined(target) && !('target' in linkAttributes)) {
-          html.push('target="', target, '" ');
-        }
-        html.push('href="', url.replace(/"/g, '&quot;'), '">');
-        addText(text);
-        html.push('</a>');
-      }
-    };
-  }]);
-})(window, window.angular);
-
-/***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21674,7 +20295,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 })(window, window.angular);
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23852,10 +22473,10 @@ if (typeof jQuery === 'undefined') {
     });
   });
 }(jQuery);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)))
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24023,6 +22644,18 @@ angular.module('tangcloud', []).directive('tangCloud', ['$interpolate', '$compil
 }]);
 
 /***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
@@ -24050,22 +22683,10 @@ angular.module('tangcloud', []).directive('tangCloud', ['$interpolate', '$compil
 /* 16 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
 module.exports = "<div class=\"page-header\">\n  <div class=\"search-bar\">\n    <span class=\"glyphicon glyphicon-search\"></span>\n    <input class=\"search-bar-input\" placeholder=\"Search Query\" ng-model=\"searchQuery\" />\n  </div>\n\n  <div class=\"page-title\">\n    Balance\n  </div>\n</div>\n\n<div class=\"results\">\n  <div class=\"results-container\">\n    <h2 class=\"results-header\">Latest Results</h2>\n\n    <div class=\"articles\" ng-if=\"latest\">\n      <div ng-repeat=\"article in latest track by $index\" class=\"article-container\" ng-click=\"openArticle(article)\">\n\n        <article ng-if=\"article.title\" article=\"article\" i=$index></article>\n        <tweet ng-if=\"article.platform\" article=\"article\" i=$index></tweet>\n\n      </div>\n    </div>\n  </div>\n\n  <div class=\"results-categories\">\n    <ul class=\"list-group\">\n      <li class=\"list-group-item\" ng-repeat=\"category in categories\">\n        <span class=\"badge\">{{category.count}}</span>\n        {{category.name}}\n      </li>\n    </ul>\n  </div>\n</div>\n\n<pageslide ps-open=\"isArticleOpen\" ps-size=\"65%\">\n  <div class=\"ps-container\">\n    <div class=\"selected-article\">\n      <div class=\"selected-article-body\" ng-class=\"{'selected-tweet-body': selectedArticle.platform}\">\n\n        <!-- <div ng-if=\"!selectedArticle.platform\" ng-bind-html=\"trustedHTML\"></div> -->\n        <iframe ng-if=\"!selectedArticle.platform\" class=\"selected-article-iframe\" ng-src=\"{{selectedArticle.trustedUrl}}\"></iframe>\n\n        <tweet ng-if=\"selectedArticle.platform\" article=\"selectedArticle\"></tweet>\n      </div>\n    </div>\n\n    <div class=\"suggested-articles\">\n      <h2>Recommended Reading <small>{{selectedArticle.analysed.percentage}}% similarity to other articles</small></h2>\n\n      <div class=\"articles\">\n        <div ng-repeat=\"article in removed\" class=\"article-container\">\n\n          <article ng-if=\"article.title\" article=\"article\" comparison=\"selectedArticle\"></article>\n          <tweet ng-if=\"article.platform\" article=\"article\" comparison=\"selectedArticle\"></tweet>\n        </div>\n\n        <!-- <ng-tag-cloud ng-if=\"isArticleOpen\" cloud-width=\"250\" cloud-height=\"250\" cloud-data=\"data\"></ng-tag-cloud> -->\n        <tang-cloud words=\"words\"></tang-cloud>\n      </div>\n    </div>\n  </div>\n</pageslide>\n"
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports) {
 
 /**
@@ -57415,7 +56036,75 @@ $provide.value("$locale", {
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
 
 /***/ }),
-/* 20 */
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _angular = __webpack_require__(0);
+
+var _angular2 = _interopRequireDefault(_angular);
+
+__webpack_require__(5);
+
+__webpack_require__(4);
+
+__webpack_require__(7);
+
+__webpack_require__(6);
+
+__webpack_require__(8);
+
+__webpack_require__(9);
+
+__webpack_require__(13);
+
+__webpack_require__(12);
+
+__webpack_require__(10);
+
+__webpack_require__(11);
+
+var _example = __webpack_require__(3);
+
+var _example2 = _interopRequireDefault(_example);
+
+var _article = __webpack_require__(1);
+
+var _article2 = _interopRequireDefault(_article);
+
+var _tweet = __webpack_require__(2);
+
+var _tweet2 = _interopRequireDefault(_tweet);
+
+__webpack_require__(14);
+
+__webpack_require__(15);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_angular2.default.module('angularWebpack', ['ui.router', 'ui.bootstrap', 'pageslide-directive', 'tangcloud']).controller('exampleController', _example2.default).directive('article', function () {
+  return new _article2.default();
+}).directive('tweet', function () {
+  return new _tweet2.default();
+}).config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
+  $locationProvider.html5Mode({
+    enabled: true
+  });
+
+  $stateProvider.state('home', {
+    url: '/',
+    template: __webpack_require__(16),
+    controller: 'exampleController',
+    controllerAs: 'ctrl'
+  });
+
+  $urlRouterProvider.otherwise('/');
+});
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -67675,89 +66364,17 @@ return jQuery;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"article\">\n  <div class=\"article-body\">\n    <div class=\"tweet-container\">\n      <div class=\"article-content\">\n        <div class=\"article-img-container\">\n          <img class=\"article-img\" ng-src=\"{{ctrl.article.image}}\" alt=\"\">\n        </div>\n\n        <p class=\"article-header\">{{ctrl.article.title}}</p>\n      </div>\n\n      <div class=\"tweet-details\">\n        <svg ng-attr-id=\"{{ 'sentiment-chart-' + ctrl.i }}\" class=\"sentiment-chart\"></svg>\n      </div>\n    </div>\n\n    <div class=\"similarity\" ng-mouseenter=\"ctrl.showDetails()\" ng-mouseleave=\"ctrl.hideDetails()\">\n      <i ng-show=\"!ctrl.article.similarity\" class='fa fa-circle-o-notch fa-spin'></i>\n\n      <uib-progress ng-show=\"ctrl.article.similarity\" class=\"progress-striped\">\n        <uib-bar value=\"ctrl.article.similarity\" type=\"success\"></uib-bar>\n        <uib-bar value=\"ctrl.article.dissimilarity\" type=\"danger\"></uib-bar>\n      </uib-progress>\n    </div>\n\n    <div class=\"view\">\n      <div ng-if=\"ctrl.compareOpposing()\" class=\"opposing\">Another perspective?</div>\n      <div ng-if=\"ctrl.compareSupporting()\" class=\"supporting\">Similar view</div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"article\">\n  <div class=\"article-body\">\n    <div class=\"tweet-container\">\n      <div class=\"article-content\">\n        <div class=\"article-img-container\">\n          <img class=\"article-img\" ng-src=\"{{ctrl.article.image}}\" alt=\"\">\n        </div>\n\n        <p class=\"article-header\">\n          <strong>{{ctrl.article.source}}</strong> - {{ctrl.article.title}}\n        </p>\n      </div>\n\n      <div class=\"tweet-details\">\n        <svg ng-attr-id=\"{{ 'sentiment-chart-' + ctrl.i }}\" class=\"sentiment-chart\"></svg>\n      </div>\n    </div>\n\n    <div class=\"similarity\" ng-mouseenter=\"ctrl.showDetails()\" ng-mouseleave=\"ctrl.hideDetails()\">\n      <i ng-show=\"!ctrl.article.similarity\" class='fa fa-circle-o-notch fa-spin'></i>\n\n      <uib-progress ng-show=\"ctrl.article.similarity\" class=\"progress-striped\">\n        <uib-bar value=\"ctrl.article.similarity\" type=\"success\"></uib-bar>\n        <uib-bar value=\"ctrl.article.dissimilarity\" type=\"danger\"></uib-bar>\n      </uib-progress>\n    </div>\n\n    <div class=\"view\">\n      <div ng-if=\"ctrl.compareOpposing()\" class=\"opposing\">Another perspective?</div>\n      <div ng-if=\"ctrl.compareSupporting()\" class=\"supporting\">Similar view</div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"article tweet\">\n  <div class=\"article-body\">\n    <div class=\"tweet-container\">\n      <div class=\"tweet-body\">\n        <img ng-if=\"ctrl.article.platform === 'Twitter'\" src=\"http://goinkscape.com/wp-content/uploads/2015/07/twitter-logo-final.png\" alt=\"\" class=\"twitter-logo\">\n        <img ng-if=\"ctrl.article.platform === 'Facebook'\" src=\"https://marketinghy.com/wp-content/uploads/2014/04/Facebook-Logo-Circle.png\" alt=\"\" class=\"twitter-logo\">\n        <img ng-if=\"ctrl.article.platform === 'Reddit'\" src=\"https://lh3.googleusercontent.com/J41hsV2swVteoeB8pDhqbQR3H83NrEBFv2q_kYdq1xp9vsI1Gz9A9pzjcwX_JrZpPGsa=w300\" alt=\"\" class=\"twitter-logo\">\n        <p class=\"unhighlighted-tweet\">\n          {{ctrl.article.text}}\n        </p>\n        <p ng-bind-html=\"ctrl.article.trustedText\" class=\"highlighted-tweet\"></p>\n      </div>\n\n      <div class=\"tweet-details\">\n        <svg ng-attr-id=\"{{ 'sentiment-chart-' + ctrl.i }}\" class=\"sentiment-chart\"></svg>\n      </div>\n    </div>\n\n    <div class=\"similarity\" ng-mouseenter=\"ctrl.showDetails()\" ng-mouseleave=\"ctrl.hideDetails()\">\n      <i ng-show=\"!ctrl.article.similarity\" class='fa fa-circle-o-notch fa-spin'></i>\n\n      <uib-progress ng-show=\"ctrl.article.similarity\" class=\"progress-striped\">\n        <uib-bar value=\"ctrl.article.similarity\" type=\"success\"></uib-bar>\n        <uib-bar value=\"ctrl.article.dissimilarity\" type=\"danger\"></uib-bar>\n      </uib-progress>\n    </div>\n\n    <div class=\"view\">\n      <div ng-if=\"ctrl.compareOpposing()\" class=\"opposing\">Another perspective?</div>\n      <div ng-if=\"ctrl.compareSupporting()\" class=\"supporting\">Similar view</div>\n    </div>\n  </div>\n</div>\n"
 
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _angular = __webpack_require__(0);
-
-var _angular2 = _interopRequireDefault(_angular);
-
-__webpack_require__(5);
-
-__webpack_require__(4);
-
-__webpack_require__(9);
-
-__webpack_require__(7);
-
-__webpack_require__(10);
-
-__webpack_require__(8);
-
-__webpack_require__(6);
-
-__webpack_require__(11);
-
-__webpack_require__(15);
-
-__webpack_require__(14);
-
-__webpack_require__(12);
-
-__webpack_require__(13);
-
-var _example = __webpack_require__(3);
-
-var _example2 = _interopRequireDefault(_example);
-
-var _article = __webpack_require__(1);
-
-var _article2 = _interopRequireDefault(_article);
-
-var _tweet = __webpack_require__(2);
-
-var _tweet2 = _interopRequireDefault(_tweet);
-
-__webpack_require__(16);
-
-__webpack_require__(17);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_angular2.default.module('angularWebpack', ['ui.router', 'ui.bootstrap', 'pageslide-directive', 'tangcloud']).controller('exampleController', _example2.default).directive('article', function () {
-  return new _article2.default();
-}).directive('tweet', function () {
-  return new _tweet2.default();
-}).config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
-  $locationProvider.html5Mode({
-    enabled: true
-  });
-
-  $stateProvider.state('home', {
-    url: '/',
-    template: __webpack_require__(18),
-    controller: 'exampleController',
-    controllerAs: 'ctrl'
-  });
-
-  $urlRouterProvider.otherwise('/');
-});
-
 /***/ })
 /******/ ]);
-//# sourceMappingURL=app.715ffa7747afdec6fb82.js.map
+//# sourceMappingURL=app.29f3ea65b55c368292e5.js.map
