@@ -75,6 +75,7 @@ body {
 
 .results-container {
   width: 80%;
+  overflow: auto;
 }
 
 .results-categories {
@@ -84,6 +85,7 @@ body {
 .results-categories .list-group,
 .results-categories .list-group .list-group-item:first-child,
 .results-categories .list-group .list-group-item:last-child {
+  margin: 0;
   border-radius: 0;
 }
 
