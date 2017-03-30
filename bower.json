@@ -20,8 +20,7 @@
     "html5-boilerplate": "^5.3.0",
     "angular-pageslide-directive": "^2.1.4",
     "angular-sanitize": "^1.6.3",
-    "angular-css-injector": "^1.4.0",
-    "angular-css": "^1.0.8"
+    "tiny-angular-wordcloud": "*"
   },
   "resolutions": {
     "angular": "^1.6.2"

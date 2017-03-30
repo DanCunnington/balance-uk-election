@@ -42,7 +42,7 @@ body {
 
 .search-bar {
   width: 100%;
-  height: 50px;
+  height: 48px;
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -254,13 +254,15 @@ body {
   font-size: 32px;
 }
 
-.selected-article .tweet-details {
+.selected-article .tweet-details,
+.suggested-articles .tweet-details {
   display: none;
 }
 
 .selected-tweet-body {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .selected-tweet-body .twitter-logo {

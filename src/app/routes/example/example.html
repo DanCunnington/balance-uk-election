@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<pageslide ps-open="isArticleOpen" ps-size="60%">
+<pageslide ps-open="isArticleOpen" ps-size="65%">
   <div class="ps-container">
     <div class="selected-article">
       <div class="selected-article-body" ng-class="{'selected-tweet-body': selectedArticle.platform}">
@@ -53,8 +53,10 @@
 
           <article ng-if="article.title" article="article" comparison="selectedArticle"></article>
           <tweet ng-if="article.platform" article="article" comparison="selectedArticle"></tweet>
-
         </div>
+
+        <!-- <ng-tag-cloud ng-if="isArticleOpen" cloud-width="250" cloud-height="250" cloud-data="data"></ng-tag-cloud> -->
+        <tang-cloud words="words"></tang-cloud>
       </div>
     </div>
   </div>

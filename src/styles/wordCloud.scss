@@ -1,0 +1,73 @@
+$darkRed: #d9534f;
+$lightRed: #df6d69;
+$darkGreen: #077107;
+$lightGreen: #89be4c;
+$neutral: #adadad;
+
+tang-cloud {
+  width: 50%;
+}
+
+.tangcloud {
+  height: 250px;
+  width: 100%;
+  position: relative;
+}
+
+.tangcloud span {
+  line-height: 100%;
+}
+
+.tangcloud-item-1 {
+  font-size: 1.3em;
+  color: $darkRed;
+}
+
+.tangcloud-item-2 {
+  font-size: 1.6em;
+  color: $lightGreen;
+}
+
+.tangcloud-item-3 {
+  font-size: 1.9em;
+  color: $lightRed;
+}
+
+.tangcloud-item-4 {
+  font-size: 2.2em;
+  color: $darkGreen;
+}
+
+.tangcloud-item-5 {
+  font-size: 2.5em;
+  color: $neutral;
+}
+
+.tangcloud-item-6 {
+  font-size: 2.8em;
+  color: $darkRed;
+}
+
+.tangcloud-item-7 {
+  font-size: 3.1em;
+  color: $lightGreen;
+}
+
+.tangcloud-item-8 {
+  font-size: 3.4em;
+  color: $lightRed;
+}
+
+.tangcloud-item-9 {
+  font-size: 3.7em;
+  color: $darkGreen;
+}
+
+.tangcloud-item-10 {
+  font-size: 4em;
+  color: $darkRed;
+}
+
+.tangcloud-item-hidden {
+  visibility: hidden;
+}

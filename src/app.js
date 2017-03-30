@@ -7,6 +7,7 @@ import './bower_components/angular-pageslide-directive/dist/angular-pageslide-di
 import './bower_components/bootstrap/dist/js/bootstrap'
 import './bower_components/angular-sanitize/angular-sanitize'
 import './bower_components/angular-css/angular-css'
+import './bower_components/tiny-angular-wordcloud/dist/tangCloud'
 
 import './bower_components/html5-boilerplate/dist/css/normalize.css'
 import './bower_components/html5-boilerplate/dist/css/main.css'
@@ -18,15 +19,13 @@ import Article from './app/directives/article/article.directive'
 import Tweet from './app/directives/tweet/tweet.directive'
 
 import './styles/styles.scss'
-// import './styles/style.scss'
+import './styles/wordCloud.scss'
 
 angular.module('angularWebpack', [
   'ui.router',
   'ui.bootstrap',
   'pageslide-directive',
-  // 'ngSanitize',
-  // 'angular.css.injector',
-  'angularCSS'
+  'tangcloud'
 ])
 
 .controller('exampleController', ExampleController)
