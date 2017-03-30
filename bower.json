@@ -13,7 +13,7 @@
     "src/bower_components"
   ],
   "dependencies": {
-    "angular": "^1.6.2",
+    "angular": "1.5.x",
     "angular-ui-router": "^0.4.2",
     "angular-bootstrap": "^2.5.0",
     "bootstrap": "^3.3.7",
@@ -23,6 +23,6 @@
     "tiny-angular-wordcloud": "*"
   },
   "resolutions": {
-    "angular": "^1.6.2"
+    "angular": "1.5.x"
   }
 }
