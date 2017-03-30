@@ -6,7 +6,9 @@
           <img class="article-img" ng-src="{{ctrl.article.image}}" alt="">
         </div>
 
-        <p class="article-header">{{ctrl.article.title}}</p>
+        <p class="article-header">
+          <strong>{{ctrl.article.source}}</strong> - {{ctrl.article.title}}
+        </p>
       </div>
 
       <div class="tweet-details">
