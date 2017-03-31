@@ -1,6 +1,7 @@
 /* eslint no-console: 0 */
 
 const path = require('path')
+const cfenv = require('cfenv')
 
 const webpack = require('webpack')
 const webpackMiddleware = require('webpack-dev-middleware')
@@ -13,8 +14,9 @@ const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
+const appEnv = cfenv.getAppEnv()
 const DEFAULT_PORT = 6001
-app.set('port', process.env.PORT || DEFAULT_PORT)
+app.set('port', appEnv.port || DEFAULT_PORT)
 
 const isDeveloping = process.env.NODE_ENV !== 'production'
 
