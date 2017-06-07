@@ -1,6 +1,6 @@
 export default class ExampleController {
   constructor($scope, $http, $sce) {
-    $scope.searchQuery = 'Brexit'
+    $scope.searchQuery = 'UK Election'
 
     function shuffle(array) {
       var currentIndex = array.length, temporaryValue, randomIndex;
