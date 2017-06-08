@@ -14,7 +14,7 @@ console.log('webpackkkk '+appEnv.port);
  */
 var ENV = process.env.npm_lifecycle_event;
 console.log(ENV);
-var isProd = ENV === 'build';
+var isProd = ENV === 'production';
 
 module.exports = function makeWebpackConfig() {
   var config = {};
