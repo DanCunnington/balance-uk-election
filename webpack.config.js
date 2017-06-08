@@ -29,7 +29,7 @@ module.exports = function makeWebpackConfig() {
 
     // Output path from the view of the page
     // Uses webpack-dev-server in development
-    publicPath: isProd ? '/' : 'http://localhost:'+appEnv.port+'/',
+    publicPath: isProd ? '/' : 'https://localhost:'+appEnv.port+'/',
 
     // Filename for entry points
     // Only adds hash in build mode
@@ -39,6 +39,8 @@ module.exports = function makeWebpackConfig() {
     // Only adds hash in build mode
     chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js'
   };
+
+  console.log(config.output);
 
   if (isProd) {
     config.devtool = 'source-map';
