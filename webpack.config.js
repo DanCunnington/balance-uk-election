@@ -4,6 +4,8 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var cfenv = require('cfenv');
+var appEnv = cfenv.getAppEnv();
 
 /**
  * Env
@@ -25,7 +27,7 @@ module.exports = function makeWebpackConfig() {
 
     // Output path from the view of the page
     // Uses webpack-dev-server in development
-    publicPath: isProd ? '/' : 'http://localhost:6001/',
+    publicPath: isProd ? '/' : 'http://localhost:'+appEnv.port+'/',
 
     // Filename for entry points
     // Only adds hash in build mode

@@ -1,5 +1,5 @@
 const request = require('request')
-const endpoint = 'http://facebook-hack-nodejs-server-uk-election/'
+const endpoint = 'http://facebook-hack-nodejs-server-uk-election.eu-gb.mybluemix.net/'
 
 let getSocial = (req, res) => {
   request.get(endpoint + 'ukelection/social', (err, response, body) => {
