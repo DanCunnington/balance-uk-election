@@ -6,12 +6,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var cfenv = require('cfenv');
 var appEnv = cfenv.getAppEnv();
+console.log('webpackkkk '+appEnv.port);
 
 /**
  * Env
  * Get npm lifecycle event to identify the environment
  */
 var ENV = process.env.npm_lifecycle_event;
+console.log(ENV);
 var isProd = ENV === 'build';
 
 module.exports = function makeWebpackConfig() {
